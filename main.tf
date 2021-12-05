@@ -74,11 +74,11 @@ terraform {
 
 
 
-resource "aws_launch_template" "lt_mw8" {
-    name_prefix   = "lt_mw8"
-    image_id      = "ami-0dd0ccab7e2801812"
+resource "aws_launch_template" "lt_mw1" {
+    name_prefix   = "lt_mw1"
+    image_id      = "ami-002068ed284fb165b"
     instance_type = "t2.micro"
-  security_group_names = [aws_security_group.allow_tls.name]
+    security_group_names = [aws_security_group.grupomw.name]
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -100,10 +100,7 @@ resource "aws_launch_template" "lt_mw8" {
           Name = "grupomw"
         }
     }
-    
-        subnet_id = "subnet-0fee10394617c28ae"
-        security_groups = ["sg_mw"]
-  		user_data = filebase64("${path.module}/Script_Inf_App/script.sh")
+        user_data = filebase64("${path.module}/Script_Inf_App/script.sh")
   }
 
 
@@ -114,7 +111,7 @@ resource "aws_launch_template" "lt_mw8" {
     min_size           = 1
 
     launch_template {
-      id      = aws_launch_template.lt_mw8.id
+      id      = aws_launch_template.lt_mw1.id
       version = "$Latest"
     }
   }
