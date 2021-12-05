@@ -1,4 +1,4 @@
-terraform {
+erraform {
     required_providers {
       aws = {
         source  = "hashicorp/aws"
@@ -53,7 +53,7 @@ terraform {
   EOF
   }
   resource "aws_security_group" "grupomw" {
-          name = "sg_mw"
+          name = "sg_mw1"
   ingress {
           from_port = 80
           to_port = 80
@@ -74,8 +74,8 @@ terraform {
 
 
 
-resource "aws_launch_template" "lt_mw1" {
-    name_prefix   = "lt_mw1"
+resource "aws_launch_template" "lt_mw2" {
+    name_prefix   = "lt_mw2"
     image_id      = "ami-002068ed284fb165b"
     instance_type = "t2.micro"
     security_group_names = [aws_security_group.grupomw.name]
@@ -104,14 +104,14 @@ resource "aws_launch_template" "lt_mw1" {
   }
 
 
-  resource "aws_autoscaling_group" "ag_tarea_mw8" {
+  resource "aws_autoscaling_group" "ag_tarea_mw2" {
     availability_zones = ["us-east-2a"]
     desired_capacity   = 1
     max_size           = 1
     min_size           = 1
 
     launch_template {
-      id      = aws_launch_template.lt_mw1.id
+      id      = aws_launch_template.lt_mw2.id
       version = "$Latest"
     }
   }
