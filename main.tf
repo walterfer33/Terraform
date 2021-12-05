@@ -1,4 +1,4 @@
-erraform {
+terraform {
     required_providers {
       aws = {
         source  = "hashicorp/aws"
@@ -53,7 +53,7 @@ erraform {
   EOF
   }
   resource "aws_security_group" "grupomw" {
-          name = "sg_mw1"
+          name = "sg_mw9"
   ingress {
           from_port = 80
           to_port = 80
@@ -74,8 +74,8 @@ erraform {
 
 
 
-resource "aws_launch_template" "lt_mw2" {
-    name_prefix   = "lt_mw2"
+resource "aws_launch_template" "lt_mw9" {
+    name_prefix   = "lt_mw9"
     image_id      = "ami-002068ed284fb165b"
     instance_type = "t2.micro"
     security_group_names = [aws_security_group.grupomw.name]
@@ -104,14 +104,43 @@ resource "aws_launch_template" "lt_mw2" {
   }
 
 
-  resource "aws_autoscaling_group" "ag_tarea_mw2" {
+  resource "aws_autoscaling_group" "ag_tarea_mw9" {
     availability_zones = ["us-east-2a"]
     desired_capacity   = 1
     max_size           = 1
     min_size           = 1
 
     launch_template {
-      id      = aws_launch_template.lt_mw2.id
+      id      = aws_launch_template.lt_mw9.id
       version = "$Latest"
     }
   }
+
+resource "aws_vpc" "vpc_mw" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_internet_gateway" "gw_mw9" {
+  vpc_id = aws_vpc.vpc_mw.id
+}
+
+
+resource "aws_subnet" "public" {
+  vpc_id     = aws_vpc.vpc_mw.id
+  cidr_block = "10.0.1.0/24"
+
+  tags = {
+    Name = "Main"
+  }
+}
+
+resource "aws_lb" "lbmw9" {
+  name               = "lbmw9"
+  internal           = false
+  load_balancer_type = "network"
+  enable_deletion_protection = true
+  subnets            = aws_subnet.public.*.id
+  tags = {
+    Environment = "production"
+  }
+}
